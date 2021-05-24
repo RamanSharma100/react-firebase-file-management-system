@@ -9,10 +9,30 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 
+//redux
+import { applyMiddleware, combineReducers, createStore } from "redux";
+import { composeWithDevTools } from "redux-devtools-extension";
+import thunk from "redux-thunk";
+import { Provider } from "react-redux";
+
+// reducers
+import authReducer from "./redux/reducers/authReducer";
+
+const reducers = combineReducers({
+  auth: authReducer,
+});
+
+const store = createStore(
+  reducers,
+  composeWithDevTools(applyMiddleware(thunk))
+);
+
 ReactDOM.render(
-  <Router>
-    <App />
-  </Router>,
+  <Provider store={store}>
+    <Router>
+      <App />
+    </Router>
+  </Provider>,
   document.getElementById("root")
 );
 
