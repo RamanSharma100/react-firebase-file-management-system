@@ -12,6 +12,14 @@ const firebaseConfig = {
   appId: process.env.React_App_appId,
 };
 
-const fire = firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(firebaseConfig);
 
-export default fire;
+const firestore = firebase.firestore();
+export const database = {
+  docs: firestore.collection("docs"),
+  date: firebase.firestore.FieldValue.serverTimestamp,
+};
+
+export const storage = firebase.storage();
+
+export const auth = firebase.auth();
