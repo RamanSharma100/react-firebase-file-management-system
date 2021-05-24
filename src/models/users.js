@@ -1,13 +1,17 @@
-const usersModel = (email, name, uid) => {
+import { database } from "../API/firebase";
+
+const userModel = (email, name, uid) => {
   const model = {
-    createdAt: new Date(),
+    createdAt: database.date,
     docs: [],
     email: email,
     image: null,
-    lastLogin: new Date(),
+    lastLogin: database.date,
     name: name,
     uid: uid,
-    updatedAt: new Date(),
+    updatedAt: database.date,
   };
   return model;
 };
+
+export default userModel;

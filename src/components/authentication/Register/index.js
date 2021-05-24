@@ -1,20 +1,58 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
+import { registerUser } from "../../../redux/actionCreators/authActionCreators";
 
 const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const dispatch = useDispatch();
+  const history = useHistory();
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!name || !email || !password)
       return toast.dark("Please fill in all fields!");
+
+    if (password !== confirmPassword)
+      return toast.dark("Passwords donot match!");
+
+    if (password.length < 8) {
+      return toast.dark("Password must be of length 8 or more");
+    }
+    if (
+      !/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/.test(password)
+    ) {
+      return toast.dark(
+        "Password must have alteast a number and a special character!"
+      );
+    }
+
+    const data = {
+      name,
+      email,
+      password,
+    };
+
+    dispatch(registerUser(data, setError));
   };
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+    if (isLoggedIn) {
+      history.push("/dashboard");
+    }
+  }, [error, isLoggedIn]);
   return (
     <Container>
       <Row>

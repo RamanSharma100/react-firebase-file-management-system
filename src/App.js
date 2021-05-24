@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Route, Switch } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
@@ -8,7 +8,18 @@ import NavbarComponent from "./components/Navbar";
 
 import "./App.css";
 
+import { useDispatch, useSelector } from "react-redux";
+import { getUser } from "./redux/actionCreators/authActionCreators";
+
 const App = () => {
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      dispatch(getUser());
+    }
+  }, [dispatch]);
   return (
     <div className="App">
       <ToastContainer position="bottom-right" />

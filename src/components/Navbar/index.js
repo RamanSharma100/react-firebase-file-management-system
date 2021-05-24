@@ -6,9 +6,10 @@ import { Link, useHistory } from "react-router-dom";
 const NavbarComponent = () => {
   const history = useHistory();
 
-  const { isLoggedIn } = useSelector(
+  const { isLoggedIn, user } = useSelector(
     (state) => ({
       isLoggedIn: state.auth.isLoggedIn,
+      user: state.auth.user,
     }),
     shallowEqual
   );
@@ -23,7 +24,28 @@ const NavbarComponent = () => {
       </Navbar.Brand>
       <Nav style={{ marginRight: "60px" }}>
         {isLoggedIn ? (
-          "Logged in"
+          <>
+            <Nav.Link
+              className="text-white d-flex align-items-center justify-content-between"
+              style={{ marginRight: "10px" }}
+            >
+              Welcome,{" "}
+              <strong style={{ marginLeft: "5px" }}>
+                <Link className="text-white" to="/dashboard/profile">
+                  {user.data.displayName}
+                </Link>
+              </strong>
+            </Nav.Link>
+            <Nav.Link
+              as={Button}
+              variant="primary"
+              active
+              style={{ marginRight: "5px" }}
+              size="sm"
+            >
+              Logout
+            </Nav.Link>
+          </>
         ) : (
           <>
             <Nav.Link
