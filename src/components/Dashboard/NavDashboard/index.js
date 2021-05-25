@@ -2,9 +2,9 @@ import React from "react";
 import { Button, Nav, Navbar } from "react-bootstrap";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
-import { logoutUser } from "../../redux/actionCreators/authActionCreators";
+import { logoutUser } from "../../../redux/actionCreators/authActionCreators";
 
-const NavbarComponent = () => {
+const NavDashboard = () => {
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -21,7 +21,12 @@ const NavbarComponent = () => {
   };
 
   return (
-    <Navbar bg="dark" expand="lg" variant="dark">
+    <Navbar
+      bg="white"
+      expand="lg"
+      variant="light"
+      className="border-bottom py-3 shadow-sm"
+    >
       <Navbar.Brand
         as={Link}
         to="/"
@@ -33,7 +38,7 @@ const NavbarComponent = () => {
         {isLoggedIn ? (
           <>
             <Nav.Link
-              className="text-white d-flex align-items-center justify-content-between"
+              className="d-flex align-items-center justify-content-between"
               style={{ pointerEvents: "unset", cursor: "text" }}
             >
               Welcome,
@@ -41,7 +46,7 @@ const NavbarComponent = () => {
             <Nav.Link
               as={Link}
               style={{ marginRight: "10px", marginLeft: "-10px" }}
-              className="text-white"
+              className="text-dark"
               to="/dashboard/profile"
             >
               <strong>{user.data.displayName}</strong>
@@ -52,9 +57,10 @@ const NavbarComponent = () => {
               active
               style={{ marginRight: "5px" }}
               size="sm"
-              onClick={() => history.push("/dashboard")}
+              onClick={() => history.push("/")}
+              className="text-white"
             >
-              Dashboard
+              Home
             </Nav.Link>
             <Nav.Link
               as={Button}
@@ -63,30 +69,15 @@ const NavbarComponent = () => {
               style={{ marginRight: "5px" }}
               size="sm"
               onClick={() => logout()}
+              className="text-white"
             >
               Logout
             </Nav.Link>
           </>
         ) : (
           <>
-            <Nav.Link
-              as={Button}
-              variant="primary"
-              onClick={() => history.push("/login")}
-              active
-              style={{ marginRight: "5px" }}
-              size="sm"
-            >
-              Login
-            </Nav.Link>
-            <Nav.Link
-              as={Button}
-              variant="success"
-              onClick={() => history.push("/signup")}
-              active
-              size="sm"
-            >
-              Register
+            <Nav.Link active style={{ marginRight: "5px" }} size="sm">
+              Loading...
             </Nav.Link>
           </>
         )}
@@ -95,4 +86,4 @@ const NavbarComponent = () => {
   );
 };
 
-export default NavbarComponent;
+export default NavDashboard;

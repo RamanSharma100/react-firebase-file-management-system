@@ -42,6 +42,22 @@ export const registerUser =
       });
   };
 
+export const loginUser =
+  ({ email, password }, setError) =>
+  (dispatch) => {
+    auth
+      .signInWithEmailAndPassword(email, password)
+      .then(async (user) => {
+        const usr = await database.users
+          .where("uid", "==", user.user.uid)
+          .get();
+        console.log(usr.docs);
+      })
+      .catch(() => {
+        setError("Invalid Email Or Password!");
+      });
+  };
+
 export const getUser = () => (dispatch) => {
   auth.onAuthStateChanged(function (user) {
     if (user) {
@@ -55,4 +71,8 @@ export const getUser = () => (dispatch) => {
       dispatch(resetUser());
     }
   });
+};
+
+export const logoutUser = () => (dispatch) => {
+  auth.signOut().then(() => dispatch(resetUser()));
 };

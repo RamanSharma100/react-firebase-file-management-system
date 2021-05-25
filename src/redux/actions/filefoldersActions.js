@@ -1,0 +1,5 @@
+export const SET_LOADING = "SET_LOADING";
+export const SET_ADMIN_FILES = "SET_ADMIN_FILES";
+export const SET_ADMIN_FOLDERS = "SET_ADMIN_FOLDERS";
+export const SET_USER_FOLDERS = "SET_USER_FOLDERS";
+export const ADD_USER_FOLDER = "ADD_USER_FOLDER";

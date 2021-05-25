@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
+import { loginUser } from "../../../redux/actionCreators/authActionCreators";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -12,18 +13,25 @@ const Login = () => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const dispatch = useDispatch();
   const history = useHistory();
+  const { pathname } = useLocation();
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (!email || !password) return toast.dark("Please fill in all fields!");
+    const data = {
+      email,
+      password,
+    };
+    dispatch(loginUser(data, setError));
   };
+
   useEffect(() => {
     if (error) {
       toast.error(error);
     }
     if (isLoggedIn) {
-      history.push("/dashboard");
+      history.goBack();
     }
   }, [error]);
   return (

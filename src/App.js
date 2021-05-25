@@ -5,6 +5,7 @@ import { ToastContainer } from "react-toastify";
 import Register from "./components/authentication/Register";
 import Login from "./components/authentication/Login";
 import NavbarComponent from "./components/Navbar";
+import Dashboard from "./components/Dashboard";
 
 import "./App.css";
 
@@ -25,16 +26,13 @@ const App = () => {
       <ToastContainer position="bottom-right" />
 
       <Switch>
+        <Route exact path={"/"}>
+          <NavbarComponent />
+          <h1>Welcome to file management system</h1>
+        </Route>
         <Route exact path="/login" component={() => <Login />}></Route>
         <Route exact path="/signup" component={() => <Register />}></Route>
-        <Route path={""}>
-          <NavbarComponent />
-          <Route
-            exact
-            path="/"
-            component={() => <h1>Welcome to file management system</h1>}
-          />
-        </Route>
+        <Route path="/dashboard" component={Dashboard} />
       </Switch>
     </div>
   );

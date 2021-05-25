@@ -17,9 +17,11 @@ import { Provider } from "react-redux";
 
 // reducers
 import authReducer from "./redux/reducers/authReducer";
+import filefolderReducer from "./redux/reducers/filefolderReducer";
 
 const reducers = combineReducers({
   auth: authReducer,
+  filefolders: filefolderReducer,
 });
 
 const store = createStore(
