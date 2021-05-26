@@ -1,0 +1,12 @@
+.CodeMirror {
+  text-align: left !important;
+  width: 100vh !important;
+  height: 100% !important;
+  max-height: 100vh !important;
+}
+.CodeMirror-wrap pre {
+  word-break: break-word;
+}
+.cm-wrap {
+  height: 100vh !important;
+}

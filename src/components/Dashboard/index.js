@@ -7,6 +7,7 @@ import NavDashboard from "./NavDashboard";
 import Home from "./Home";
 import FolderAdminComponent from "./FolderAdminComponent";
 import FolderComponent from "./FolderComponent";
+import FileComponent from "./FileComponent";
 
 const Dashboard = () => {
   const history = useHistory();
@@ -42,6 +43,7 @@ const Dashboard = () => {
           path={`${path}/folder/:folderId`}
           component={FolderComponent}
         />
+        <Route exact path={`${path}/file/:fileId`} component={FileComponent} />
       </Switch>
     </Container>
   );

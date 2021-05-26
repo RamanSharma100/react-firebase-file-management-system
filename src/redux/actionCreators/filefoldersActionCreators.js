@@ -10,6 +10,7 @@ import {
   ADD_USER_FOLDER,
   SET_USER_FILES,
   ADD_USER_FILE,
+  UPDATE_USER_FILE_DATA,
 } from "../actions/filefoldersActions";
 
 const setLoading = (data) => ({
@@ -147,3 +148,27 @@ export const addFileUser =
         toast.error("Something went wrong!");
       });
   };
+
+const updateUserFileData = (data) => ({
+  type: UPDATE_USER_FILE_DATA,
+  payload: data,
+});
+
+export const userFileDataUpdate = (data, docId) => (dispatch) => {
+  database.files
+    .doc(docId)
+    .update({
+      updatedAt: new Date(),
+      data: data,
+    })
+    .then(() => {
+      dispatch(updateUserFileData({ data, docId }));
+      toast.success("Saved Successfully!!");
+
+      document.querySelector(".CodeMirror").focus();
+    })
+    .catch((err) => {
+      console.log(err);
+      toast.error("Something went wrong!");
+    });
+};

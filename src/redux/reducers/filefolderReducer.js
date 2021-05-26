@@ -7,6 +7,7 @@ import {
   SET_LOADING,
   SET_USER_FILES,
   SET_USER_FOLDERS,
+  UPDATE_USER_FILE_DATA,
 } from "../actions/filefoldersActions";
 
 const initialState = {
@@ -43,6 +44,18 @@ const filefolderReducer = (state = initialState, { type, payload }) => {
       return state;
     case ADD_USER_FILE:
       state = { ...state, userFiles: [...state.userFiles, payload] };
+      return state;
+    case UPDATE_USER_FILE_DATA:
+      const currentUserFile = state.userFiles.find(
+        (file) => file.docId === payload.docId
+      );
+      currentUserFile.data.data = payload.data;
+      state = {
+        ...state,
+        userFiles: state.userFiles.map((file) =>
+          file.docId === payload.docId ? currentUserFile : file
+        ),
+      };
       return state;
     default:
       return state;
