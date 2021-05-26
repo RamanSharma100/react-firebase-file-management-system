@@ -14,15 +14,19 @@ import SubNav from "../SubNav.js";
 const Home = () => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const { isLoading, adminFolders, userFolders, userId } = useSelector(
+  const { isLoading, adminFolders, allUserFolders, userId } = useSelector(
     (state) => ({
       isLoading: state.filefolders.isLoading,
       adminFolders: state.filefolders.adminFolders,
-      userFolders: state.filefolders.userFolders,
+      allUserFolders: state.filefolders.userFolders,
       userId: state.auth.userId,
     }),
     shallowEqual
   );
+
+  const userFolders =
+    allUserFolders &&
+    allUserFolders.filter((folder) => folder.data.parent === "");
 
   useEffect(() => {
     if (isLoading && !adminFolders) {

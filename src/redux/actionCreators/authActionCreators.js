@@ -2,6 +2,7 @@ import { toast } from "react-toastify";
 import { auth, database } from "../../API/firebase";
 import userModel from "../../models/users";
 import { RESET_USER, SET_USER } from "../actions/authActions";
+import { RESET_FOLDERS_FILES } from "../actions/filefoldersActions";
 
 const setUser = (data) => ({
   type: SET_USER,
@@ -73,6 +74,13 @@ export const getUser = () => (dispatch) => {
   });
 };
 
+const reserFilesFolders = () => ({
+  type: RESET_FOLDERS_FILES,
+});
+
 export const logoutUser = () => (dispatch) => {
-  auth.signOut().then(() => dispatch(resetUser()));
+  auth.signOut().then(() => {
+    dispatch(resetUser());
+    dispatch(reserFilesFolders());
+  });
 };

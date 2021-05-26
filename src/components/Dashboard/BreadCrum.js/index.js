@@ -6,7 +6,7 @@ const BreadCrum = ({ currentFolder }) => {
   const history = useHistory();
   return (
     <Breadcrumb>
-      {currentFolder.data.path.length > 0 ? (
+      {currentFolder && currentFolder.data.path.length > 0 ? (
         <>
           <Breadcrumb.Item
             linkAs={Button}
@@ -22,8 +22,11 @@ const BreadCrum = ({ currentFolder }) => {
           {currentFolder.data.path.map((folder, index) => (
             <Breadcrumb.Item
               key={index}
-              variant="white"
               linkAs={Button}
+              linkProps={{
+                variant: "white",
+                className: "text-primary",
+              }}
               onClick={() =>
                 history.push(
                   currentFolder.data.createdBy === "admin"

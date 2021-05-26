@@ -2,7 +2,7 @@ import { faFolderPlus, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { addFolderUser } from "../../redux/actionCreators/filefoldersActionCreators";
 
@@ -11,28 +11,48 @@ const CreateFolder = ({ currentFolder }) => {
   const [folderName, setFolderName] = useState("");
 
   const dispatch = useDispatch();
-  const userId = useSelector((state) => state.auth.userId);
+  const { userId, userFolders } = useSelector(
+    (state) => ({
+      userId: state.auth.userId,
+      userFolders: state.filefolders.userFolders,
+    }),
+    shallowEqual
+  );
 
   const handleFolderSubmit = (e) => {
     e.preventDefault();
-
+    const filteredFolders =
+      currentFolder === "root folder"
+        ? userFolders.filter(
+            (folder) =>
+              folder.data.parent === "" &&
+              folder.data.name === folderName.trim()
+          )
+        : userFolders.filter(
+            (folder) =>
+              folder.data.parent === currentFolder.docId &&
+              folder.data.name === folderName.trim()
+          );
     if (!folderName) return toast.dark("Please enter folder name!");
 
+    if (filteredFolders.length > 0)
+      return toast.dark("This is alredy present in folder");
+
     if (currentFolder === "root folder") {
-      dispatch(addFolderUser(folderName, userId, [], []));
+      dispatch(addFolderUser(folderName, userId, "", []));
       setFolderName("");
       setShowModal(false);
       return;
     }
 
-    dispatch(
-      addFolderUser(
-        folderName,
-        userId,
-        currentFolder.docId,
-        currentFolder.data.path
-      )
-    );
+    const path =
+      currentFolder.data.path.length > 0
+        ? [
+            ...currentFolder.data.path,
+            { id: currentFolder.docId, name: currentFolder.data.name },
+          ]
+        : [{ id: currentFolder.docId, name: currentFolder.data.name }];
+    dispatch(addFolderUser(folderName, userId, currentFolder.docId, path));
     setFolderName("");
     setShowModal(false);
     return;

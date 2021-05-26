@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import { auth, database } from "../../API/firebase";
+import { database } from "../../API/firebase";
 import docModel from "../../models/docs";
 import {
   SET_LOADING,

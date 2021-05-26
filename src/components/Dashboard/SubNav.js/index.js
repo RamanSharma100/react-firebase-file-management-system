@@ -9,7 +9,7 @@ const SubNav = ({ currentFolder }) => {
       md={12}
       className={"d-flex align-items-center px-5 pt-3 justify-content-between"}
     >
-      {currentFolder !== "root folder" ? (
+      {currentFolder && currentFolder !== "root folder" ? (
         <>
           <BreadCrum currentFolder={currentFolder} />
           {currentFolder.data.createdBy !== "admin" && (

@@ -6,6 +6,7 @@ import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
 import NavDashboard from "./NavDashboard";
 import Home from "./Home";
 import FolderAdminComponent from "./FolderAdminComponent";
+import FolderComponent from "./FolderComponent";
 
 const Dashboard = () => {
   const history = useHistory();
@@ -35,6 +36,11 @@ const Dashboard = () => {
           exact
           path={`${path}/folder/admin/:folderId`}
           component={FolderAdminComponent}
+        />
+        <Route
+          exact
+          path={`${path}/folder/:folderId`}
+          component={FolderComponent}
         />
       </Switch>
     </Container>
