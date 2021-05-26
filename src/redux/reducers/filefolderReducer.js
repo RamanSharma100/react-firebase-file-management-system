@@ -1,9 +1,11 @@
 import {
+  ADD_USER_FILE,
   ADD_USER_FOLDER,
   RESET_FOLDERS_FILES,
   SET_ADMIN_FILES,
   SET_ADMIN_FOLDERS,
   SET_LOADING,
+  SET_USER_FILES,
   SET_USER_FOLDERS,
 } from "../actions/filefoldersActions";
 
@@ -35,6 +37,12 @@ const filefolderReducer = (state = initialState, { type, payload }) => {
       return state;
     case RESET_FOLDERS_FILES:
       state = initialState;
+      return state;
+    case SET_USER_FILES:
+      state = { ...state, userFiles: payload };
+      return state;
+    case ADD_USER_FILE:
+      state = { ...state, userFiles: [...state.userFiles, payload] };
       return state;
     default:
       return state;

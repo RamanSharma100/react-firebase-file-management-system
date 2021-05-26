@@ -1,12 +1,15 @@
 import { toast } from "react-toastify";
 import { database } from "../../API/firebase";
 import docModel from "../../models/docs";
+import fileModel from "../../models/files";
 import {
   SET_LOADING,
   SET_ADMIN_FILES,
   SET_ADMIN_FOLDERS,
   SET_USER_FOLDERS,
   ADD_USER_FOLDER,
+  SET_USER_FILES,
+  ADD_USER_FILE,
 } from "../actions/filefoldersActions";
 
 const setLoading = (data) => ({
@@ -98,3 +101,49 @@ export const addFolderUser = (name, userId, parent, path) => (dispatch) => {
       toast.error("Something went wrong!");
     });
 };
+
+const setUserFiles = (data) => ({
+  type: SET_USER_FILES,
+  payload: data,
+});
+
+export const getUserFiles = (userId) => (dispatch) => {
+  if (userId) {
+    database.files
+      .where("createdBy", "==", userId)
+      .get()
+      .then((files) => {
+        const allFiles = [];
+        files.docs.forEach((doc) => {
+          allFiles.push({ data: doc.data(), docId: doc.id });
+        });
+        dispatch(setUserFiles(allFiles));
+      })
+      .catch((err) => {
+        console.log("foldererr", err);
+        toast.error("Failed to fetch data!");
+      });
+  }
+};
+
+const addUserFile = (data) => ({
+  type: ADD_USER_FILE,
+  payload: data,
+});
+
+export const addFileUser =
+  ({ uid, parent, data, name, url, path }) =>
+  (dispatch) => {
+    database.files
+      .add(fileModel(uid, parent, data, name, url, path))
+      .then(async (doc) => {
+        const data = await doc.get();
+        dispatch(addUserFile({ data: data.data(), docId: data.id }));
+        toast.success("File created Successfully!");
+        toast.success("You can double click on the file to open the editor!");
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error("Something went wrong!");
+      });
+  };

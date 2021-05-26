@@ -1,4 +1,4 @@
-import { faFile, faFolder } from "@fortawesome/free-solid-svg-icons";
+import { faFile, faFileAlt, faFolder } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect } from "react";
 import { Col, Row } from "react-bootstrap";
@@ -7,6 +7,7 @@ import { useHistory, useParams } from "react-router";
 import {
   getAdminFiles,
   getAdminFolders,
+  getUserFiles,
   getUserFolders,
 } from "../../../redux/actionCreators/filefoldersActionCreators";
 import SubNav from "../SubNav.js";
@@ -14,9 +15,10 @@ import SubNav from "../SubNav.js";
 const FolderComponent = () => {
   const { folderId } = useParams();
 
-  const { folders, isLoading, userId } = useSelector(
+  const { folders, isLoading, userId, files } = useSelector(
     (state) => ({
       folders: state.filefolders.userFolders,
+      files: state.filefolders.userFiles,
       isLoading: state.filefolders.isLoading,
       userId: state.filefolders.userId,
     }),
@@ -30,6 +32,7 @@ const FolderComponent = () => {
       dispatch(getAdminFolders());
       dispatch(getAdminFiles());
       dispatch(getUserFolders(userId));
+      dispatch(getUserFiles(userId));
     }
   }, [dispatch, isLoading]);
   const userFolders =
@@ -37,6 +40,12 @@ const FolderComponent = () => {
 
   const currentFolder =
     folders && folders.find((folder) => folder.docId === folderId);
+
+  const createdFiles =
+    files &&
+    files.filter(
+      (file) => file.data.parent === folderId && file.data.url === ""
+    );
   if (isLoading) {
     return (
       <Row>
@@ -47,7 +56,12 @@ const FolderComponent = () => {
     );
   }
 
-  if (userFolders && userFolders.length < 1) {
+  if (
+    userFolders &&
+    userFolders.length < 1 &&
+    createdFiles &&
+    createdFiles.length < 1
+  ) {
     return (
       <>
         <SubNav currentFolder={currentFolder} />
@@ -102,6 +116,43 @@ const FolderComponent = () => {
                 </Col>
               ))
             )}
+          </Row>
+        </>
+      )}
+      {createdFiles && createdFiles.length > 0 && (
+        <>
+          <p className="border-bottom py-2">Created Files</p>
+          <Row
+            md="2"
+            style={{ height: "auto" }}
+            className="pt-2  gap-2 pb-4 px-5"
+          >
+            {createdFiles.map(({ data, docId }) => (
+              <Col
+                onDoubleClick={() => history.push(`/dashboard/file/${docId}`)}
+                onClick={(e) => {
+                  if (e.currentTarget.classList.contains("text-white")) {
+                    e.currentTarget.style.background = "#fff";
+                    e.currentTarget.classList.remove("text-white");
+                    e.currentTarget.classList.remove("shadow-sm");
+                  } else {
+                    e.currentTarget.style.background = "#017bf562";
+                    e.currentTarget.classList.add("text-white");
+                    e.currentTarget.classList.add("shadow-sm");
+                  }
+                }}
+                key={docId}
+                md={2}
+                className="border h-100 mr-2 d-flex align-items-center justify-content-around flex-column py-1 rounded-2"
+              >
+                <FontAwesomeIcon
+                  icon={faFileAlt}
+                  className="mt-3"
+                  style={{ fontSize: "3rem" }}
+                />
+                <p className="mt-3">{data.name}</p>
+              </Col>
+            ))}
           </Row>
         </>
       )}
