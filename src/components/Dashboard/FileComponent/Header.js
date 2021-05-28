@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { faArrowLeft, faSave } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, Col, Row } from "react-bootstrap";
@@ -6,13 +6,8 @@ import { useHistory } from "react-router-dom";
 import { userFileDataUpdate } from "../../../redux/actionCreators/filefoldersActionCreators";
 import { useDispatch } from "react-redux";
 
-const Header = ({ data, prevData, currentFile }) => {
+const Header = ({ data, prevData, currentFile, setPrevData, setData }) => {
   const history = useHistory();
-  const [update, setUPdate] = useState(data.trim() !== prevData.trim());
-
-  useEffect(() => {
-    setUPdate(data.trim() !== prevData.trim());
-  }, [prevData]);
 
   const dispatch = useDispatch();
   const pushItBack = () => {
@@ -26,9 +21,17 @@ const Header = ({ data, prevData, currentFile }) => {
       } else {
         return;
       }
+    } else {
+      history.push(
+        currentFile.data.parent === ""
+          ? "/dashboard"
+          : `dashboard/folder/${currentFile.data.parent}`
+      );
     }
   };
   const saveFile = () => {
+    setData(data + "\n");
+    setPrevData(data.trim());
     dispatch(userFileDataUpdate(data.trim(), currentFile.docId));
   };
 
@@ -37,12 +40,16 @@ const Header = ({ data, prevData, currentFile }) => {
       <Col md={5} className="d-flex align-items-center justify-content-between">
         <h5 className="font-weight-bold">
           {currentFile.data.name}
-          {update && " [* . Modified]"}
+          {data.trim() !== prevData.trim() && " [* . Modified]"}
         </h5>
       </Col>
       <Col md={5} className="d-flex align-items-center justify-content-end">
-        <Button variant="success" disabled={!update}>
-          <FontAwesomeIcon icon={faSave} onClick={() => saveFile()} />
+        <Button
+          variant="success"
+          disabled={data.trim() === prevData.trim()}
+          onClick={() => saveFile()}
+        >
+          <FontAwesomeIcon icon={faSave} />
           &nbsp; Save
         </Button>
         &nbsp;

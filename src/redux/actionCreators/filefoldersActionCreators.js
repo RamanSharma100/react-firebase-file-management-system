@@ -140,8 +140,12 @@ export const addFileUser =
       .then(async (doc) => {
         const data = await doc.get();
         dispatch(addUserFile({ data: data.data(), docId: data.id }));
-        toast.success("File created Successfully!");
-        toast.success("You can double click on the file to open the editor!");
+        if (data.data().url === "") {
+          toast.success("File created Successfully!");
+          toast.success("You can double click on the file to open the editor!");
+        } else {
+          toast.success("File uploaded Successfully!");
+        }
       })
       .catch((err) => {
         console.log(err);

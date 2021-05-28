@@ -2,6 +2,7 @@ import React from "react";
 import { Col } from "react-bootstrap";
 import CreateFile from "../../CreateFile/index.js";
 import CreateFolder from "../../CreateFolder/index.js";
+import UploadFile from "../../UploadFile/index.js";
 import BreadCrum from "../BreadCrum.js";
 
 const SubNav = ({ currentFolder }) => {
@@ -15,6 +16,8 @@ const SubNav = ({ currentFolder }) => {
           <BreadCrum currentFolder={currentFolder} />
           {currentFolder.data.createdBy !== "admin" && (
             <div className="ml-auto col-md-5 d-flex justify-content-end">
+              <UploadFile currentFolder={currentFolder} />
+              &nbsp;
               <CreateFile currentFolder={currentFolder} />
               &nbsp;
               <CreateFolder currentFolder={currentFolder} />
@@ -25,6 +28,8 @@ const SubNav = ({ currentFolder }) => {
         <>
           <p>Root</p>
           <div className="ml-auto col-md-5 d-flex justify-content-end">
+            <UploadFile currentFolder={currentFolder} />
+            &nbsp;
             <CreateFile currentFolder={currentFolder} />
             &nbsp;
             <CreateFolder currentFolder={currentFolder} />

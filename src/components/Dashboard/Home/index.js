@@ -1,4 +1,10 @@
-import { faFileAlt, faFolder } from "@fortawesome/free-solid-svg-icons";
+import {
+  faFileImage,
+  faFileAlt,
+  faFileAudio,
+  faFileVideo,
+  faFolder,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect } from "react";
 import { Col, Row } from "react-bootstrap";
@@ -36,13 +42,20 @@ const Home = () => {
     allUserFiles.filter(
       (file) => file.data.parent === "" && file.data.url === ""
     );
+  const uploadedUserFiles =
+    allUserFiles &&
+    allUserFiles.filter(
+      (file) => file.data.parent === "" && file.data.url !== ""
+    );
 
   useEffect(() => {
     if (isLoading && !adminFolders) {
       dispatch(getAdminFolders());
       dispatch(getAdminFiles());
-      dispatch(getUserFolders(userId));
+    }
+    if (!userFolders) {
       dispatch(getUserFiles(userId));
+      dispatch(getUserFolders(userId));
     }
   }, [dispatch, isLoading]);
 
@@ -151,6 +164,72 @@ const Home = () => {
               >
                 <FontAwesomeIcon
                   icon={faFileAlt}
+                  className="mt-3"
+                  style={{ fontSize: "3rem" }}
+                />
+                <p className="mt-3">{data.name}</p>
+              </Col>
+            ))}
+          </Row>
+        </>
+      )}
+      {uploadedUserFiles && uploadedUserFiles.length > 0 && (
+        <>
+          <p className="border-bottom py-2">Uploaded Files</p>
+          <Row
+            md="2"
+            style={{ height: "auto" }}
+            className="pt-2  gap-2 pb-4 px-5"
+          >
+            {uploadedUserFiles.map(({ data, docId }) => (
+              <Col
+                onDoubleClick={() => history.push(`/dashboard/file/${docId}`)}
+                onClick={(e) => {
+                  if (e.currentTarget.classList.contains("text-white")) {
+                    e.currentTarget.style.background = "#fff";
+                    e.currentTarget.classList.remove("text-white");
+                    e.currentTarget.classList.remove("shadow-sm");
+                  } else {
+                    e.currentTarget.style.background = "#017bf562";
+                    e.currentTarget.classList.add("text-white");
+                    e.currentTarget.classList.add("shadow-sm");
+                  }
+                }}
+                key={docId}
+                md={2}
+                className="border h-100 mr-2 d-flex align-items-center justify-content-around flex-column py-1 rounded-2"
+              >
+                <FontAwesomeIcon
+                  icon={
+                    data.name
+                      .split(".")
+                      [data.name.split(".").length - 1].includes("png") ||
+                    data.name
+                      .split(".")
+                      [data.name.split(".").length - 1].includes("jpg") ||
+                    data.name
+                      .split(".")
+                      [data.name.split(".").length - 1].includes("jpeg") ||
+                    data.name
+                      .split(".")
+                      [data.name.split(".").length - 1].includes("svg") ||
+                    data.name
+                      .split(".")
+                      [data.name.split(".").length - 1].includes("gif")
+                      ? faFileImage
+                      : data.name
+                          .split(".")
+                          [data.name.split(".").length - 1].includes("mp4") ||
+                        data.name.split(".") ||
+                        [data.name.split(".").length - 1].includes("mpeg") ||
+                        data.name.split(".")
+                      ? faFileVideo
+                      : data.name
+                          .split(".")
+                          [data.name.split(".").length - 1].includes("mp3")
+                      ? faFileAudio
+                      : faFileAlt
+                  }
                   className="mt-3"
                   style={{ fontSize: "3rem" }}
                 />

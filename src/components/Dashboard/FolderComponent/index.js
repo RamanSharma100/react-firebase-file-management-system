@@ -1,4 +1,11 @@
-import { faFile, faFileAlt, faFolder } from "@fortawesome/free-solid-svg-icons";
+import {
+  faFile,
+  faFileAlt,
+  faFileAudio,
+  faFileImage,
+  faFileVideo,
+  faFolder,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect } from "react";
 import { Col, Row } from "react-bootstrap";
@@ -20,7 +27,7 @@ const FolderComponent = () => {
       folders: state.filefolders.userFolders,
       files: state.filefolders.userFiles,
       isLoading: state.filefolders.isLoading,
-      userId: state.filefolders.userId,
+      userId: state.auth.userId,
     }),
     shallowEqual
   );
@@ -28,13 +35,15 @@ const FolderComponent = () => {
   const history = useHistory();
 
   useEffect(() => {
-    if (isLoading && !folders) {
+    if (isLoading) {
       dispatch(getAdminFolders());
       dispatch(getAdminFiles());
+    }
+    if (!folders && !files) {
       dispatch(getUserFolders(userId));
       dispatch(getUserFiles(userId));
     }
-  }, [dispatch, isLoading]);
+  }, [dispatch, folders, isLoading]);
   const userFolders =
     folders && folders.filter((file) => file.data.parent === folderId);
 
@@ -46,6 +55,13 @@ const FolderComponent = () => {
     files.filter(
       (file) => file.data.parent === folderId && file.data.url === ""
     );
+
+  const uploadedFiles =
+    files &&
+    files.filter(
+      (file) => file.data.parent === folderId && file.data.url !== ""
+    );
+
   if (isLoading) {
     return (
       <Row>
@@ -60,7 +76,9 @@ const FolderComponent = () => {
     userFolders &&
     userFolders.length < 1 &&
     createdFiles &&
-    createdFiles.length < 1
+    createdFiles.length < 1 &&
+    uploadedFiles &&
+    uploadedFiles.length < 1
   ) {
     return (
       <>
@@ -147,6 +165,72 @@ const FolderComponent = () => {
               >
                 <FontAwesomeIcon
                   icon={faFileAlt}
+                  className="mt-3"
+                  style={{ fontSize: "3rem" }}
+                />
+                <p className="mt-3">{data.name}</p>
+              </Col>
+            ))}
+          </Row>
+        </>
+      )}
+      {uploadedFiles && uploadedFiles.length > 0 && (
+        <>
+          <p className="border-bottom py-2">Uploaded Files</p>
+          <Row
+            md="2"
+            style={{ height: "auto" }}
+            className="pt-2  gap-2 pb-4 px-5"
+          >
+            {uploadedFiles.map(({ data, docId }) => (
+              <Col
+                onDoubleClick={() => history.push(`/dashboard/file/${docId}`)}
+                onClick={(e) => {
+                  if (e.currentTarget.classList.contains("text-white")) {
+                    e.currentTarget.style.background = "#fff";
+                    e.currentTarget.classList.remove("text-white");
+                    e.currentTarget.classList.remove("shadow-sm");
+                  } else {
+                    e.currentTarget.style.background = "#017bf562";
+                    e.currentTarget.classList.add("text-white");
+                    e.currentTarget.classList.add("shadow-sm");
+                  }
+                }}
+                key={docId}
+                md={2}
+                className="border h-100 mr-2 d-flex align-items-center justify-content-around flex-column py-1 rounded-2"
+              >
+                <FontAwesomeIcon
+                  icon={
+                    data.name
+                      .split(".")
+                      [data.name.split(".").length - 1].includes("png") ||
+                    data.name
+                      .split(".")
+                      [data.name.split(".").length - 1].includes("jpg") ||
+                    data.name
+                      .split(".")
+                      [data.name.split(".").length - 1].includes("jpeg") ||
+                    data.name
+                      .split(".")
+                      [data.name.split(".").length - 1].includes("svg") ||
+                    data.name
+                      .split(".")
+                      [data.name.split(".").length - 1].includes("gif")
+                      ? faFileImage
+                      : data.name
+                          .split(".")
+                          [data.name.split(".").length - 1].includes("mp4") ||
+                        data.name.split(".") ||
+                        [data.name.split(".").length - 1].includes("mpeg") ||
+                        data.name.split(".")
+                      ? faFileVideo
+                      : data.name
+                          .split(".")
+                          [data.name.split(".").length - 1].includes("mp3")
+                      ? faFileAudio
+                      : faFileAlt
+                  }
                   className="mt-3"
                   style={{ fontSize: "3rem" }}
                 />

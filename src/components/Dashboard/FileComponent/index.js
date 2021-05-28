@@ -86,7 +86,7 @@ const FileComponent = () => {
       setData(currentFile.data.data);
       setPrevData(currentFile.data.data);
     }
-  }, [dispatch, isLoading, currentFile.data.data]);
+  }, [dispatch, isLoading, currentFile && currentFile.data.data]);
 
   if (isLoading) {
     return (
@@ -100,21 +100,23 @@ const FileComponent = () => {
   return (
     <>
       {currentFile ? (
-        currentFile.data.url === "" ||
-        !currentFile.data.name.includes(".jpg") ||
-        !currentFile.data.name.includes(".png") ||
-        !currentFile.data.name.includes(".jpeg") ||
-        !currentFile.data.name.includes(".doc") ||
-        !currentFile.data.name.includes(".ppt") ||
-        !currentFile.data.name.includes(".pptx") ||
-        !currentFile.data.name.includes(".xls") ||
-        !currentFile.data.name.includes(".rar") ? (
+        currentFile.data.url === "" &&
+        (!currentFile.data.name.includes(".jpg") ||
+          !currentFile.data.name.includes(".png") ||
+          !currentFile.data.name.includes(".jpeg") ||
+          !currentFile.data.name.includes(".doc") ||
+          !currentFile.data.name.includes(".ppt") ||
+          !currentFile.data.name.includes(".pptx") ||
+          !currentFile.data.name.includes(".xls") ||
+          !currentFile.data.name.includes(".rar")) ? (
           <>
             <Header
               currentFile={currentFile}
               data={data}
               prevData={prevData}
               userId={userId}
+              setPrevData={setPrevData}
+              setData={setData}
             />
             <Row
               className="m-0 w-100 "
