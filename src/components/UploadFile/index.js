@@ -42,7 +42,7 @@ const UploadFile = ({ currentFolder }) => {
       "json",
       "ppt",
       "pptx",
-      "doc",
+      "docx",
       "png",
       "jpg",
       "jpeg",
@@ -50,7 +50,7 @@ const UploadFile = ({ currentFolder }) => {
       "svg",
       "mp3",
       "mp4",
-      "mpeg",
+      "webm",
     ];
 
     if (allowedExtensions.indexOf(fileExtension) === -1) {

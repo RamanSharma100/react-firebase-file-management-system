@@ -74,7 +74,7 @@ const Home = () => {
       <SubNav currentFolder="root folder" />
       {adminFolders && adminFolders.length > 0 && (
         <>
-          <p className="border-bottom py-2">Admin Folders</p>
+          <p className="text-center border-bottom py-2">Admin Folders</p>
           <Row style={{ height: "150px" }} className="pt-2 pb-4 px-5">
             {adminFolders.map(({ data, docId }) => (
               <Col
@@ -101,7 +101,7 @@ const Home = () => {
                   className="mt-3"
                   style={{ fontSize: "3rem" }}
                 />
-                <p className="mt-3">{data.name}</p>
+                <p className="text-center mt-3">{data.name}</p>
               </Col>
             ))}
           </Row>
@@ -109,7 +109,7 @@ const Home = () => {
       )}
       {userFolders && userFolders.length > 0 && (
         <>
-          <p className="border-bottom py-2">Created Folders</p>
+          <p className="text-center border-bottom py-2">Created Folders</p>
           <Row style={{ height: "auto" }} className="pt-2 gap-2 pb-4 px-5">
             {userFolders.map(({ data, docId }) => (
               <Col
@@ -134,7 +134,7 @@ const Home = () => {
                   className="mt-3"
                   style={{ fontSize: "3rem" }}
                 />
-                <p className="mt-3">{data.name}</p>
+                <p className="text-center mt-3">{data.name}</p>
               </Col>
             ))}
           </Row>
@@ -142,7 +142,7 @@ const Home = () => {
       )}
       {createdUserFiles && createdUserFiles.length > 0 && (
         <>
-          <p className="border-bottom py-2">Created Files</p>
+          <p className="text-center border-bottom py-2">Created Files</p>
           <Row style={{ height: "auto" }} className="pt-2 gap-2 pb-4 px-5">
             {createdUserFiles.map(({ data, docId }) => (
               <Col
@@ -167,7 +167,7 @@ const Home = () => {
                   className="mt-3"
                   style={{ fontSize: "3rem" }}
                 />
-                <p className="mt-3">{data.name}</p>
+                <p className="text-center mt-3">{data.name}</p>
               </Col>
             ))}
           </Row>
@@ -175,7 +175,7 @@ const Home = () => {
       )}
       {uploadedUserFiles && uploadedUserFiles.length > 0 && (
         <>
-          <p className="border-bottom py-2">Uploaded Files</p>
+          <p className="text-center border-bottom py-2">Uploaded Files</p>
           <Row
             md="2"
             style={{ height: "auto" }}
@@ -220,9 +220,9 @@ const Home = () => {
                       : data.name
                           .split(".")
                           [data.name.split(".").length - 1].includes("mp4") ||
-                        data.name.split(".") ||
-                        [data.name.split(".").length - 1].includes("mpeg") ||
-                        data.name.split(".")
+                        data.name
+                          .split(".")
+                          [data.name.split(".").length - 1].includes("mpeg")
                       ? faFileVideo
                       : data.name
                           .split(".")
@@ -233,7 +233,7 @@ const Home = () => {
                   className="mt-3"
                   style={{ fontSize: "3rem" }}
                 />
-                <p className="mt-3">{data.name}</p>
+                <p className="text-center mt-3">{data.name}</p>
               </Col>
             ))}
           </Row>

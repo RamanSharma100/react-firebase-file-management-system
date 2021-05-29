@@ -85,7 +85,7 @@ const FolderComponent = () => {
         <SubNav currentFolder={currentFolder} />
         <Row>
           <Col md="12">
-            <p className="small text-center my-5">Empty Folder</p>
+            <p className="text-center small text-center my-5">Empty Folder</p>
           </Col>
         </Row>
       </>
@@ -96,7 +96,7 @@ const FolderComponent = () => {
       <SubNav currentFolder={currentFolder} />
       {userFolders && userFolders.length > 0 && (
         <>
-          <p className="border-bottom py-2">Created Folders</p>
+          <p className="text-center border-bottom py-2">Created Folders</p>
           <Row
             md="2"
             style={{ height: "auto" }}
@@ -130,7 +130,7 @@ const FolderComponent = () => {
                     className="mt-3"
                     style={{ fontSize: "3rem" }}
                   />
-                  <p className="mt-3">{data.name}</p>
+                  <p className="text-center mt-3">{data.name}</p>
                 </Col>
               ))
             )}
@@ -139,7 +139,7 @@ const FolderComponent = () => {
       )}
       {createdFiles && createdFiles.length > 0 && (
         <>
-          <p className="border-bottom py-2">Created Files</p>
+          <p className="text-center border-bottom py-2">Created Files</p>
           <Row
             md="2"
             style={{ height: "auto" }}
@@ -168,7 +168,7 @@ const FolderComponent = () => {
                   className="mt-3"
                   style={{ fontSize: "3rem" }}
                 />
-                <p className="mt-3">{data.name}</p>
+                <p className="text-center mt-3">{data.name}</p>
               </Col>
             ))}
           </Row>
@@ -176,7 +176,7 @@ const FolderComponent = () => {
       )}
       {uploadedFiles && uploadedFiles.length > 0 && (
         <>
-          <p className="border-bottom py-2">Uploaded Files</p>
+          <p className="text-center border-bottom py-2">Uploaded Files</p>
           <Row
             md="2"
             style={{ height: "auto" }}
@@ -221,9 +221,9 @@ const FolderComponent = () => {
                       : data.name
                           .split(".")
                           [data.name.split(".").length - 1].includes("mp4") ||
-                        data.name.split(".") ||
-                        [data.name.split(".").length - 1].includes("mpeg") ||
-                        data.name.split(".")
+                        data.name
+                          .split(".")
+                          [data.name.split(".").length - 1].includes("webm")
                       ? faFileVideo
                       : data.name
                           .split(".")
@@ -234,7 +234,7 @@ const FolderComponent = () => {
                   className="mt-3"
                   style={{ fontSize: "3rem" }}
                 />
-                <p className="mt-3">{data.name}</p>
+                <p className="text-center mt-3">{data.name}</p>
               </Col>
             ))}
           </Row>
