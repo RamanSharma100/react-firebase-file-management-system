@@ -24,7 +24,7 @@ import FileViewer from "react-file-viewer";
 import "./FileComponent.css";
 import Header from "./Header";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDownload } from "@fortawesome/free-solid-svg-icons";
+import { faDownload, faEye } from "@fortawesome/free-solid-svg-icons";
 
 const FileComponent = () => {
   const { fileId } = useParams();
@@ -244,29 +244,94 @@ const FileComponent = () => {
                 </div>
               </div>
               <Col md={12} style={{ height: "83%" }}>
-                <FileViewer
-                  fileType={
-                    currentFile.data.name.split(".")[
-                      currentFile.data.name.split(".").length - 1
-                    ]
-                  }
-                  filePath={currentFile.data.url}
-                  errorComponent={
-                    <>
-                      <h1>This file is not viewable</h1>
-                      <a
-                        className="btn btn-primary"
-                        target="_blank"
-                        href={currentFile.data.url}
-                        download
-                      >
-                        <FontAwesomeIcon icon={faDownload} />
-                        &nbsp; Download
-                      </a>
-                    </>
-                  }
-                  style={{ height: "100%", width: "100%" }}
-                />
+                {currentFile.data.name
+                  .split(".")
+                  [currentFile.data.name.split(".").length - 1].includes(
+                    "pdf"
+                  ) ? (
+                  <a
+                    className="btn btn-primary mx-auto mt-5"
+                    target="_blank"
+                    href={currentFile.data.url}
+                  >
+                    <FontAwesomeIcon icon={faEye} />
+                    &nbsp; View{" "}
+                    {
+                      currentFile.data.name.split(".")[
+                        currentFile.data.name.split(".").length - 1
+                      ]
+                    }{" "}
+                    file
+                  </a>
+                ) : currentFile.data.name
+                    .split(".")
+                    [currentFile.data.name.split(".").length - 1].includes(
+                      "csv"
+                    ) ||
+                  currentFile.data.name
+                    .split(".")
+                    [currentFile.data.name.split(".").length - 1].includes(
+                      "xslx"
+                    ) ||
+                  currentFile.data.name
+                    .split(".")
+                    [currentFile.data.name.split(".").length - 1].includes(
+                      "docx"
+                    ) ||
+                  currentFile.data.name
+                    .split(".")
+                    [currentFile.data.name.split(".").length - 1].includes(
+                      "mp4"
+                    ) ||
+                  currentFile.data.name
+                    .split(".")
+                    [currentFile.data.name.split(".").length - 1].includes(
+                      "webm"
+                    ) ||
+                  currentFile.data.name
+                    .split(".")
+                    [currentFile.data.name.split(".").length - 1].includes(
+                      "mp3"
+                    ) ? (
+                  <FileViewer
+                    fileType={
+                      currentFile.data.name.split(".")[
+                        currentFile.data.name.split(".").length - 1
+                      ]
+                    }
+                    filePath={currentFile.data.url}
+                    errorComponent={
+                      <>
+                        <h1>This file is not viewable</h1>
+                        <a
+                          className="btn btn-primary"
+                          target="_blank"
+                          href={currentFile.data.url}
+                          download
+                        >
+                          <FontAwesomeIcon icon={faDownload} />
+                          &nbsp; Download
+                        </a>
+                      </>
+                    }
+                    style={{ height: "100%", width: "100%" }}
+                  />
+                ) : (
+                  <a
+                    className="btn btn-primary mx-auto mt-5"
+                    target="_blank"
+                    href={currentFile.data.url}
+                  >
+                    <FontAwesomeIcon icon={faEye} />
+                    &nbsp; View{" "}
+                    {
+                      currentFile.data.name.split(".")[
+                        currentFile.data.name.split(".").length - 1
+                      ]
+                    }{" "}
+                    file
+                  </a>
+                )}
               </Col>
             </Col>
           </Row>

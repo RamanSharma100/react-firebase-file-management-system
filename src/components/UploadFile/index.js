@@ -51,6 +51,7 @@ const UploadFile = ({ currentFolder }) => {
       "mp3",
       "mp4",
       "webm",
+      "pdf",
     ];
 
     if (allowedExtensions.indexOf(fileExtension) === -1) {
