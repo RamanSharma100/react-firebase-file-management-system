@@ -1,0 +1,68 @@
+.code-edit-container {
+    position: relative !important;
+    height: 500px;
+    /* width: 100%; */
+    /* margin: 1em 0; */
+    color: #fff;
+}
+
+.code-input,
+.code-output {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100% !important;
+    padding: 1rem;
+    border: none;
+    font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+    font-size: 0.8rem;
+    background: transparent;
+    white-space: pre-wrap;
+    line-height: 1.5em;
+    word-wrap: break-word;
+    font-size: 1rem;
+}
+
+.code-input {
+    opacity: 1;
+    margin: 0;
+    resize: none;
+    padding: 15px;
+    padding-left: 39px;
+    font-size: 0.8rem;
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+
+.code-output {
+    pointer-events: none;
+    z-index: 3;
+    margin: 0;
+    background: transparent !important;
+    overflow-y: auto;
+}
+
+code {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+    padding: 1rem;
+    background: #fff !important;
+    display: block;
+    font-size: 0.8rem;
+    font-family: "PT Mono", monospace;
+}
+
+pre {
+    background: #fff !important;
+}
+
+/* overrides */
+.code-edit-container :not(pre)>code[class*="language-"],
+.code-edit-container pre[class*="language-"] {
+    background: transparent;
+    margin: 0;
+}
