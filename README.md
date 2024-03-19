@@ -9,8 +9,8 @@ This is the file management system made with reactjs and frebase. where user cn 
 ## Installation Guide
 
 1. Download repo and unzip it.
-2. Open terminal under this repo and run `yarn` to install all dependencies
+2. Open terminal under this repo and run `pnpm install` to install all dependencies
 3. Now, create .env file in the root directory and copy the data from .env.sample file
 4. Now, Create your firebase project on firebase console and fill your credentials in .env file
-5. Now, run `yarn dev` to run development server.
+5. Now, run `pnpm start` to run development server.
 
