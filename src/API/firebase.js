@@ -1,24 +1,24 @@
-import firebase from "firebase/app";
-import "firebase/auth";
-import "firebase/firestore";
-import "firebase/storage";
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
+import 'firebase/compat/storage';
 
 const firebaseConfig = {
-  apiKey: process.env.React_App_apiKey,
-  authDomain: process.env.React_App_authDomain,
-  projectId: process.env.React_App_projectId,
-  storageBucket: process.env.React_App_storageBucket,
-  messagingSenderId: process.env.React_App_messagingSenderId,
-  appId: process.env.React_App_appId,
+  apiKey: import.meta.env.VITE_APP_apiKey,
+  authDomain: import.meta.env.VITE_APP_authDomain,
+  projectId: import.meta.env.VITE_APP_projectId,
+  storageBucket: import.meta.env.VITE_APP_storageBucket,
+  messagingSenderId: import.meta.env.VITE_APP_messagingSenderId,
+  appId: import.meta.env.VITE_APP_appId,
 };
 
 firebase.initializeApp(firebaseConfig);
 
 const firestore = firebase.firestore();
 export const database = {
-  users: firestore.collection("users"),
-  docs: firestore.collection("docs"),
-  files: firestore.collection("files"),
+  users: firestore.collection('users'),
+  docs: firestore.collection('docs'),
+  files: firestore.collection('files'),
   date: firebase.firestore.FieldValue.serverTimestamp(),
 };
 
