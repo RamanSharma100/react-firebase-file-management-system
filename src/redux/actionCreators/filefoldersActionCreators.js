@@ -1,7 +1,7 @@
-import { toast } from "react-toastify";
-import { database } from "../../API/firebase";
-import docModel from "../../models/docs";
-import fileModel from "../../models/files";
+import { toast } from 'react-toastify';
+import { database, storage } from '../../API/firebase';
+import docModel from '../../models/docs';
+import fileModel from '../../models/files';
 import {
   SET_LOADING,
   SET_ADMIN_FILES,
@@ -11,7 +11,14 @@ import {
   SET_USER_FILES,
   ADD_USER_FILE,
   UPDATE_USER_FILE_DATA,
-} from "../actions/filefoldersActions";
+  SELECT_ITEM,
+  DESELECT_ITEM,
+  DESELECT_ALL,
+  SELECT_ITEMS,
+  DESELECT_ITEMS,
+  DELETE_FILES,
+  DELETE_FOLDERS,
+} from '../actions/filefoldersActions';
 
 const setLoading = (data) => ({
   type: SET_LOADING,
@@ -30,7 +37,7 @@ export const getAdminFolders = () => (dispatch) => {
   dispatch(setLoading(true));
 
   database.docs
-    .where("createdBy", "==", "admin")
+    .where('createdBy', '==', 'admin')
     .get()
     .then((folders) => {
       const allFolders = [];
@@ -41,12 +48,12 @@ export const getAdminFolders = () => (dispatch) => {
       dispatch(setLoading(false));
     })
     .catch((err) => {
-      toast.error("Failed to fetch data!");
+      toast.error('Failed to fetch data!');
     });
 };
 export const getAdminFiles = () => (dispatch) => {
   database.files
-    .where("createdBy", "==", "admin")
+    .where('createdBy', '==', 'admin')
     .get()
     .then((files) => {
       const allFiles = [];
@@ -56,7 +63,7 @@ export const getAdminFiles = () => (dispatch) => {
       dispatch(setAdminFiles(allFiles));
     })
     .catch((err) => {
-      toast.error("Failed to fetch data!");
+      toast.error('Failed to fetch data!');
     });
 };
 
@@ -68,7 +75,7 @@ const setUserFolders = (data) => ({
 export const getUserFolders = (userId) => async (dispatch) => {
   if (userId) {
     database.docs
-      .where("createdBy", "==", userId)
+      .where('createdBy', '==', userId)
       .get()
       .then((folders) => {
         const allFolders = [];
@@ -78,8 +85,8 @@ export const getUserFolders = (userId) => async (dispatch) => {
         dispatch(setUserFolders(allFolders));
       })
       .catch((err) => {
-        console.log("foldererr", err);
-        toast.error("Failed to fetch data!");
+        console.log('foldererr', err);
+        toast.error('Failed to fetch data!');
       });
   }
 };
@@ -95,11 +102,11 @@ export const addFolderUser = (name, userId, parent, path) => (dispatch) => {
     .then(async (doc) => {
       const data = await doc.get();
       dispatch(addUserFolder({ data: data.data(), docId: data.id }));
-      toast.success("Folder added Successfully!");
+      toast.success('Folder added Successfully!');
     })
     .catch((err) => {
       console.log(err);
-      toast.error("Something went wrong!");
+      toast.error('Something went wrong!');
     });
 };
 
@@ -111,7 +118,7 @@ const setUserFiles = (data) => ({
 export const getUserFiles = (userId) => (dispatch) => {
   if (userId) {
     database.files
-      .where("createdBy", "==", userId)
+      .where('createdBy', '==', userId)
       .get()
       .then((files) => {
         const allFiles = [];
@@ -121,8 +128,8 @@ export const getUserFiles = (userId) => (dispatch) => {
         dispatch(setUserFiles(allFiles));
       })
       .catch((err) => {
-        console.log("foldererr", err);
-        toast.error("Failed to fetch data!");
+        console.log('foldererr', err);
+        toast.error('Failed to fetch data!');
       });
   }
 };
@@ -140,16 +147,16 @@ export const addFileUser =
       .then(async (doc) => {
         const data = await doc.get();
         dispatch(addUserFile({ data: data.data(), docId: data.id }));
-        if (data.data().url === "") {
-          toast.success("File created Successfully!");
-          toast.success("You can double click on the file to open the editor!");
+        if (data.data().url === '') {
+          toast.success('File created Successfully!');
+          toast.success('You can double click on the file to open the editor!');
         } else {
-          toast.success("File uploaded Successfully!");
+          toast.success('File uploaded Successfully!');
         }
       })
       .catch((err) => {
         console.log(err);
-        toast.error("Something went wrong!");
+        toast.error('Something went wrong!');
       });
   };
 
@@ -167,12 +174,128 @@ export const userFileDataUpdate = (data, docId) => (dispatch) => {
     })
     .then(() => {
       dispatch(updateUserFileData({ data, docId }));
-      toast.success("Saved Successfully!!");
+      toast.success('Saved Successfully!!');
 
-      document.querySelector(".CodeMirror").focus();
+      document.querySelector('.CodeMirror').focus();
     })
     .catch((err) => {
       console.log(err);
-      toast.error("Something went wrong!");
+      toast.error('Something went wrong!');
     });
+};
+
+export const selectItem = (data) => ({
+  type: SELECT_ITEM,
+  payload: data,
+});
+
+export const deselectItem = (data) => ({
+  type: DESELECT_ITEM,
+  payload: data,
+});
+
+export const deselectAll = () => ({
+  type: DESELECT_ALL,
+});
+
+const selectItems = (data) => ({
+  type: SELECT_ITEMS,
+  payload: data,
+});
+
+const deselectItems = (data) => ({
+  type: DESELECT_ITEMS,
+  payload: data,
+});
+
+const deleteFilesAction = (doctIds) => ({
+  type: DELETE_FILES,
+  payload: doctIds,
+});
+
+export const deleteFoldersAction = (doctIds) => ({
+  type: DELETE_FOLDERS,
+  payload: doctIds,
+});
+
+export const getSubItems = (state, data = {}) => {
+  const {
+    filefolders: { userFolders, userFiles },
+  } = state();
+
+  const folderFiles = userFiles
+    .filter((file) => file.data.parent === data.docId)
+    .map((file) => ({ ...file, type: 'file' }));
+
+  const subFolders = userFolders
+    .filter(
+      (folder) =>
+        folder.data.path.find((path) => path.id === data.docId) !== undefined
+    )
+    .map((folder) => ({ ...folder, type: 'folder' }));
+
+  return {
+    folderFiles,
+    subFolders,
+  };
+};
+
+export const selectFolder = (data) => (dispatch, state) => {
+  const { folderFiles, subFolders } = getSubItems(state, data);
+
+  dispatch(
+    selectItems([{ ...data, type: 'folder' }, ...folderFiles, ...subFolders])
+  );
+};
+
+export const deselctFolder = (docId) => (dispatch, state) => {
+  const { folderFiles, subFolders } = getSubItems(state, { docId });
+
+  const filesDocIds = folderFiles.map((file) => file.docId);
+  const foldersDocIds = subFolders.map((folder) => folder.docId);
+
+  dispatch(deselectItems([docId, ...filesDocIds, ...foldersDocIds]));
+};
+
+const deleteFiles = (files) => {
+  const promises = files.map((file) => {
+    if (file.data.url) {
+      try {
+        database.files.doc(file.docId).delete();
+        storage.refFromURL(file.data.url).delete();
+      } catch (err) {
+        console.log(err);
+        console.log('Failed to delete file', file.data.name);
+      }
+
+      return true;
+    }
+    return database.files.doc(file.docId).delete();
+  });
+
+  return Promise.all(promises);
+};
+
+export const deleteItems = () => (dispatch, state) => {
+  const {
+    filefolders: { selectedItems },
+  } = state();
+
+  const files = selectedItems.filter((item) => item.type === 'file');
+  const folders = selectedItems.filter((item) => item.type === 'folder');
+
+  deleteFiles(files).then((response) => {
+    if (response.length === files.length) {
+      dispatch(deleteFilesAction(files.map((file) => file.docId)));
+    }
+
+    folders.forEach((folder) => {
+      database.docs.doc(folder.docId).delete();
+    });
+
+    dispatch(deleteFoldersAction(folders.map((folder) => folder.docId)));
+    dispatch(deselectAll());
+
+    toast.success('Deleted Items Successfully!');
+  });
 };

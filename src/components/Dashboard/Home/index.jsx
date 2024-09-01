@@ -15,23 +15,44 @@ import {
   getAdminFolders,
   getUserFiles,
   getUserFolders,
+  selectItem,
+  deselctFolder,
+  deselectItem,
+  deselectAll,
+  selectFolder,
 } from '../../../redux/actionCreators/filefoldersActionCreators.js';
 import SubNav from '../SubNav.js/index.jsx';
 
 const Home = () => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const { isLoading, adminFolders, allUserFolders, userId, allUserFiles } =
-    useSelector(
-      (state) => ({
-        isLoading: state.filefolders.isLoading,
-        adminFolders: state.filefolders.adminFolders,
-        allUserFolders: state.filefolders.userFolders,
-        allUserFiles: state.filefolders.userFiles,
-        userId: state.auth.userId,
-      }),
-      shallowEqual
-    );
+  const {
+    isLoading,
+    adminFolders,
+    allUserFolders,
+    userId,
+    allUserFiles,
+    selectedItems,
+  } = useSelector(
+    (state) => ({
+      isLoading: state.filefolders.isLoading,
+      adminFolders: state.filefolders.adminFolders,
+      allUserFolders: state.filefolders.userFolders,
+      allUserFiles: state.filefolders.userFiles,
+      userId: state.auth.userId,
+      selectedItems: state.filefolders.selectedItems,
+    }),
+    shallowEqual
+  );
+
+  const isItemSelected = (docId) => {
+    return selectedItems.find((item) => item.docId === docId) ? true : false;
+  };
+
+  const changeRoute = (url) => {
+    dispatch(deselectAll());
+    history.push(url);
+  };
 
   const userFolders =
     allUserFolders &&
@@ -112,13 +133,16 @@ const Home = () => {
           <Row style={{ height: 'auto' }} className="pt-2 gap-2 pb-4 px-5">
             {userFolders.map(({ data, docId }) => (
               <Col
-                onDoubleClick={() => history.push(`/dashboard/folder/${docId}`)}
+                onDoubleClick={() => changeRoute(`/dashboard/folder/${docId}`)}
                 onClick={(e) => {
-                  if (e.currentTarget.classList.contains('text-white')) {
+                  if (isItemSelected(docId)) {
+                    dispatch(deselctFolder(docId));
                     e.currentTarget.style.background = '#fff';
                     e.currentTarget.classList.remove('text-white');
                     e.currentTarget.classList.remove('shadow-sm');
                   } else {
+                    // dispatch(selectItem({ docId, data, type: 'folder' }));
+                    dispatch(selectFolder({ docId, data }));
                     e.currentTarget.style.background = '#017bf562';
                     e.currentTarget.classList.add('text-white');
                     e.currentTarget.classList.add('shadow-sm');
@@ -144,13 +168,15 @@ const Home = () => {
           <Row style={{ height: 'auto' }} className="pt-2 gap-2 pb-4 px-5">
             {createdUserFiles.map(({ data, docId }) => (
               <Col
-                onDoubleClick={() => history.push(`/dashboard/file/${docId}`)}
+                onDoubleClick={() => changeRoute(`/dashboard/file/${docId}`)}
                 onClick={(e) => {
-                  if (e.currentTarget.classList.contains('text-white')) {
+                  if (isItemSelected(docId)) {
+                    dispatch(deselectItem({ docId }));
                     e.currentTarget.style.background = '#fff';
                     e.currentTarget.classList.remove('text-white');
                     e.currentTarget.classList.remove('shadow-sm');
                   } else {
+                    dispatch(selectItem({ docId, data, type: 'file' }));
                     e.currentTarget.style.background = '#017bf562';
                     e.currentTarget.classList.add('text-white');
                     e.currentTarget.classList.add('shadow-sm');
@@ -179,13 +205,15 @@ const Home = () => {
             className="pt-2  gap-2 pb-4 px-5">
             {uploadedUserFiles.map(({ data, docId }) => (
               <Col
-                onDoubleClick={() => history.push(`/dashboard/file/${docId}`)}
+                onDoubleClick={() => changeRoute(`/dashboard/file/${docId}`)}
                 onClick={(e) => {
-                  if (e.currentTarget.classList.contains('text-white')) {
+                  if (isItemSelected(docId)) {
+                    dispatch(deselectItem({ docId }));
                     e.currentTarget.style.background = '#fff';
                     e.currentTarget.classList.remove('text-white');
                     e.currentTarget.classList.remove('shadow-sm');
                   } else {
+                    dispatch(selectItem({ docId, data, type: 'file' }));
                     e.currentTarget.style.background = '#017bf562';
                     e.currentTarget.classList.add('text-white');
                     e.currentTarget.classList.add('shadow-sm');

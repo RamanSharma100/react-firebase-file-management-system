@@ -4,6 +4,7 @@ import CreateFile from '../../CreateFile/index.jsx';
 import CreateFolder from '../../CreateFolder/index.jsx';
 import UploadFile from '../../UploadFile/index.jsx';
 import BreadCrum from '../BreadCrum.js/index.jsx';
+import DeleteButton from '../../DeleteButton/index.jsx';
 
 const SubNav = ({ currentFolder }) => {
   return (
@@ -14,7 +15,9 @@ const SubNav = ({ currentFolder }) => {
         <>
           <BreadCrum currentFolder={currentFolder} />
           {currentFolder.data.createdBy !== 'admin' && (
-            <div className="ml-auto col-md-5 d-flex justify-content-end">
+            <div className="ml-auto col-md-6 d-flex justify-content-end">
+              <DeleteButton currentFolder={currentFolder} />
+              &nbsp;
               <UploadFile currentFolder={currentFolder} />
               &nbsp;
               <CreateFile currentFolder={currentFolder} />
@@ -26,7 +29,9 @@ const SubNav = ({ currentFolder }) => {
       ) : (
         <>
           <p>Root</p>
-          <div className="ml-auto col-md-5 d-flex justify-content-end">
+          <div className="ml-auto col-md-6 d-flex justify-content-end">
+            <DeleteButton currentFolder={currentFolder} />
+            &nbsp;
             <UploadFile currentFolder={currentFolder} />
             &nbsp;
             <CreateFile currentFolder={currentFolder} />

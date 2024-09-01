@@ -15,18 +15,24 @@ import {
   getAdminFolders,
   getUserFiles,
   getUserFolders,
+  selectItem,
+  deselectItem,
+  deselectAll,
+  deselctFolder,
+  selectFolder,
 } from '../../../redux/actionCreators/filefoldersActionCreators.js';
 import SubNav from '../SubNav.js/index.jsx';
 
 const FolderComponent = () => {
   const { folderId } = useParams();
 
-  const { folders, isLoading, userId, files } = useSelector(
+  const { folders, isLoading, userId, files, selectedItems } = useSelector(
     (state) => ({
       folders: state.filefolders.userFolders,
       files: state.filefolders.userFiles,
       isLoading: state.filefolders.isLoading,
       userId: state.auth.userId,
+      selectedItems: state.filefolders.selectedItems,
     }),
     shallowEqual
   );
@@ -60,6 +66,15 @@ const FolderComponent = () => {
     files.filter(
       (file) => file.data.parent === folderId && file.data.url !== ''
     );
+
+  const isItemSelected = (docId) => {
+    return selectedItems.find((item) => item.docId === docId) ? true : false;
+  };
+
+  const changeRoute = (url) => {
+    dispatch(deselectAll());
+    history.push(url);
+  };
 
   if (isLoading) {
     return (
@@ -106,14 +121,17 @@ const FolderComponent = () => {
               userFolders.map(({ data, docId }) => (
                 <Col
                   onDoubleClick={() =>
-                    history.push(`/dashboard/folder/${docId}`)
+                    changeRoute(`/dashboard/folder/${docId}`)
                   }
                   onClick={(e) => {
-                    if (e.currentTarget.classList.contains('text-white')) {
+                    if (isItemSelected(docId)) {
+                      dispatch(deselctFolder(docId));
                       e.currentTarget.style.background = '#fff';
                       e.currentTarget.classList.remove('text-white');
                       e.currentTarget.classList.remove('shadow-sm');
                     } else {
+                      // dispatch(selectItem({ docId, data, type: 'folder' }));
+                      dispatch(selectFolder({ docId, data }));
                       e.currentTarget.style.background = '#017bf562';
                       e.currentTarget.classList.add('text-white');
                       e.currentTarget.classList.add('shadow-sm');
@@ -143,13 +161,15 @@ const FolderComponent = () => {
             className="pt-2  gap-2 pb-4 px-5">
             {createdFiles.map(({ data, docId }) => (
               <Col
-                onDoubleClick={() => history.push(`/dashboard/file/${docId}`)}
+                onDoubleClick={() => changeRoute(`/dashboard/file/${docId}`)}
                 onClick={(e) => {
-                  if (e.currentTarget.classList.contains('text-white')) {
+                  if (isItemSelected(docId)) {
+                    dispatch(deselectItem({ docId }));
                     e.currentTarget.style.background = '#fff';
                     e.currentTarget.classList.remove('text-white');
                     e.currentTarget.classList.remove('shadow-sm');
                   } else {
+                    dispatch(selectItem({ docId, data, type: 'file' }));
                     e.currentTarget.style.background = '#017bf562';
                     e.currentTarget.classList.add('text-white');
                     e.currentTarget.classList.add('shadow-sm');
@@ -178,13 +198,15 @@ const FolderComponent = () => {
             className="pt-2  gap-2 pb-4 px-5">
             {uploadedFiles.map(({ data, docId }) => (
               <Col
-                onDoubleClick={() => history.push(`/dashboard/file/${docId}`)}
+                onDoubleClick={() => changeRoute(`/dashboard/file/${docId}`)}
                 onClick={(e) => {
-                  if (e.currentTarget.classList.contains('text-white')) {
+                  if (isItemSelected(docId)) {
+                    dispatch(deselectItem({ docId }));
                     e.currentTarget.style.background = '#fff';
                     e.currentTarget.classList.remove('text-white');
                     e.currentTarget.classList.remove('shadow-sm');
                   } else {
+                    dispatch(selectItem({ docId, data, type: 'file' }));
                     e.currentTarget.style.background = '#017bf562';
                     e.currentTarget.classList.add('text-white');
                     e.currentTarget.classList.add('shadow-sm');
